@@ -1,0 +1,19 @@
+{
+  "name": "typescript-ddd-boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bryan-Herrera-DEV/typescript-ddd-boilerplate.git"
+  },
+  "keywords": ["ddd", "typescript", "boilerplate", "nodejs", "clean-architecture"],
+  "author": "Bryan-Herrera-DEV",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bryan-Herrera-DEV/typescript-ddd-boilerplate/issues"
+  }
+}
