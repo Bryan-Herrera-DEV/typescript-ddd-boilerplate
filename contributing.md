@@ -29,12 +29,10 @@ En resumen: Sé amable. Presta atención al hecho de que "typescript-ddd-boilerp
 Cuando abras una incidencia, sé descriptivo sobre el fallo o la sugerencia de funcionalidad, no te limites a pegar el mensaje de error en el título o la descripción de la incidencia. Además, proporciona código para simular el fallo, necesitamos saber las circunstancias exactas en las que se produce el fallo. De nuevo, sigue nuestro código de conducta.
 
 ## Pull Request
-Al abrir un pull request al boilerplate de la API de Node, sigue estos pasos:
+Al abrir un pull request al "typescript-ddd-boilerplate", sigue estos pasos:
 
 ### Haz un fork del proyecto;
 Crea una nueva rama para tus cambios;
 Haz tus cambios;
 Abre el pull request;
 Escribe una descripción completa sobre el error o la característica de la solicitud de extracción.
-
-Traducción realizada con la versión gratuita del traductor www.DeepL.com/Translator
