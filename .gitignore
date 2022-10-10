@@ -16,3 +16,4 @@ coverage/
 ._*
 dist/
 .vscode/
+package-lock.json
