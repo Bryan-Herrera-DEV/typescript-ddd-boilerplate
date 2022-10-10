@@ -1,0 +1,16 @@
+# Logs
+*.log
+*.logs
+# Node
+node_modules/
+
+# Project specific
+config/database.js
+
+# Unit test / coverage reports
+coverage/
+.nyc_output
+
+# OS auto-generated files
+.DS_Store
+._*
