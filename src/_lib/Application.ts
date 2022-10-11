@@ -23,6 +23,14 @@ enum Lifecycle {
   DISPOSED = 'DISPOSED',
 }
 
+type Application = {
+  getState: () => AppState;
+  start: () => Promise<void>;
+  stop: () => Promise<void>;
+  terminate: () => void;
+  decorateHooks: (decorator?: (lifecycle: Lifecycle, fn: HookFn | HookFn[]) => HookFn | HookFn[]) => Application;
+};
+
 const makeHookStore = (): HookStore => {
   const hooks = new Map<Lifecycle, HookFn[]>();
 
@@ -48,3 +56,4 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
 }
 
 export { makeApp }
+export type { HookFn, Application }
