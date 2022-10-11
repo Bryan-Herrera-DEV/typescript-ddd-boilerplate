@@ -7,4 +7,8 @@ const defaultOptions: ContextOptions = {
   shutdownTimeout: 5000,
   logger: console,
 }
-const makeContext = () => {}
+const makeContext = (opts: Partial<ContextOptions> = {}) => {
+  const { shutdownTimeout, logger } = { ...defaultOptions, ...opts };
+
+  const moduleKey = Symbol();
+}
