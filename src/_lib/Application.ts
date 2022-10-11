@@ -68,6 +68,7 @@ const memo = <F extends (...args: any[]) => any>(fn: F) => {
     return value;
   };
 };
+const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
 const makeApp = ({ logger, shutdownTimeout }: any) => {
   let appState: AppState = AppState.IDLE;
