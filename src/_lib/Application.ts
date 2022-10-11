@@ -142,7 +142,7 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
     process.stdout.write('\n');
 
     setTimeout(() => {
-      logger.error('Ok, my patience is over! #ragequit');
+      logger.error('Vale, ¡se me acabó la paciencia!   #ragequit');
       process.exit(code);
     }, shutdownTimeout).unref();
 
@@ -151,7 +151,7 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
         process.kill(process.pid, 'SIGKILL');
       }
 
-      logger.warn('The application is yet to finishing the shutdown process. Repeat the command to force exit');
+      logger.warn('La aplicación aún no ha terminado el proceso de apagado. Repita el comando para forzar la salida');
       forceShutdown = true;
       return;
     }
@@ -164,6 +164,31 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
 
     process.exit(code);
   };
+
+  const terminate = () => process.kill(process.pid, 'SIGTERM');
+
+  process.on('SIGTERM', shutdown(0));
+  process.on('SIGINT', shutdown(0));
+  process.on('uncaughtException', shutdown(1));
+  process.on('unhandledRejection', shutdown(1));
+
+  const lifecycleHooks = (
+    decorator: (lifecycle: Lifecycle, fn: HookFn | HookFn[]) => HookFn | HookFn[] = (lifecycle, fn) => fn
+  ) => {
+    const once = (lifecycle: Lifecycle, fn: HookFn | HookFn[], order = 'append') => {
+      const decoratedFn = decorator(lifecycle, fn);
+      Array.isArray(decoratedFn) ? hooks[order](lifecycle, ...decoratedFn) : hooks[order](lifecycle, decoratedFn);
+    };
+    return Object.keys(Lifecycle).reduce(
+      (acc, hook) => ({
+        ...acc,
+        [`on`]: (fn: HookFn | HookFn[], order?: 'append' | 'prepend') =>
+          once(Lifecycle[hook], fn, order),
+      }),
+      {}
+    ) as unknown as LifecycleHooks;
+  };
+
 };
 
 
