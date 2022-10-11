@@ -136,6 +136,34 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
   });
 
 
+  let forceShutdown = false;
+
+  const shutdown = (code: number) => async () => {
+    process.stdout.write('\n');
+
+    setTimeout(() => {
+      logger.error('Ok, my patience is over! #ragequit');
+      process.exit(code);
+    }, shutdownTimeout).unref();
+
+    if ((appState === AppState.STOPPING || appState === AppState.STOPPED) && code === 0) {
+      if (forceShutdown) {
+        process.kill(process.pid, 'SIGKILL');
+      }
+
+      logger.warn('The application is yet to finishing the shutdown process. Repeat the command to force exit');
+      forceShutdown = true;
+      return;
+    }
+
+    try {
+      await stop();
+    } catch (err) {
+      logger.error(err);
+    }
+
+    process.exit(code);
+  };
 };
 
 
