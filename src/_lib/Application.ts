@@ -53,6 +53,10 @@ const makeHookStore = (): HookStore => {
   };
 };
 
+const promiseChain = <M extends HookFn[]>(hooksFns: M) => {
+  return hooksFns.reduce((chain, fn) => chain.then(fn), Promise.resolve());
+};
+
 const makeApp = ({ logger, shutdownTimeout }: any) => {
   let appState: AppState = AppState.IDLE;
   let release: null | (() => void);
@@ -70,6 +74,9 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
   const status = (newStatus: AppState) => async () => {
     appState = newStatus;
   };
+
+  const transition = (lifecycle: Lifecycle) => () => promiseChain(hooks.get(lifecycle));
+
 };
 
 export { makeApp };
