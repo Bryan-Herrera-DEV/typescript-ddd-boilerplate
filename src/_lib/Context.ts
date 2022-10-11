@@ -1,5 +1,11 @@
 import { makeApp } from '@/_lib/Application';
 
+type ContextApp = "";
+
+type Context<T extends Record<string | symbol, any>> = {
+  app: ContextApp;
+} & T;
+
 type ContextOptions = {
   shutdownTimeout: number;
   logger: Pick<Console, 'info' | 'error' | 'warn'>;
@@ -17,5 +23,5 @@ const makeContext = (opts: Partial<ContextOptions> = {}) => {
 
   const app = makeApp({shutdownTimeout, logger});
 
-  const bootstrap = async (...modules: any) =>{}
+  const bootstrap = async (...modules: any): Promise<void> =>{}
 }
