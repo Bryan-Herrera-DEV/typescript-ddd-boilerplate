@@ -190,6 +190,20 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
     ) as unknown as LifecycleHooks;
   };
 
+
+  const application: Application = {
+    start,
+    stop,
+    terminate,
+    getState: () => appState,
+    decorateHooks: (decorator?): Application => ({
+      ...application,
+      ...lifecycleHooks(decorator),
+    }),
+    ...lifecycleHooks(),
+  };
+
+  return application;
 };
 
 
