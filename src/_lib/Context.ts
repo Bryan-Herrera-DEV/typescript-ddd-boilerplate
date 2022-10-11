@@ -1,9 +1,17 @@
-import { makeApp } from '@/_lib/Application';
+import { makeApp, HookFn, Application } from '@/_lib/Application';
 
-type ContextApp = "";
+type BootFn<T extends Record<string | symbol, any>> = (arg: Context<T>) => Promise<void | HookFn>;
+
+type Module<T extends Record<string | symbol, any>, F extends BootFn<T> = BootFn<any>> = {
+  name: string;
+  fn: F;
+};
+
+type ContextApp = Omit<Application, 'start' | 'onBooting'>;
 
 type Context<T extends Record<string | symbol, any>> = {
   app: ContextApp;
+  bootstrap: <M extends Module<T>[]>(...modules: M) => Promise<void>;
 } & T;
 
 type ContextOptions = {
