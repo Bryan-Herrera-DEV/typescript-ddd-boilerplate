@@ -183,7 +183,7 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
     return Object.keys(Lifecycle).reduce(
       (acc, hook) => ({
         ...acc,
-        [`on`]: (fn: HookFn | HookFn[], order?: 'append' | 'prepend') =>
+        [`on${capitalize(hook)}`]: (fn: HookFn | HookFn[], order?: 'append' | 'prepend') =>
           once(Lifecycle[hook], fn, order),
       }),
       {}
