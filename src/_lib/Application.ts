@@ -90,6 +90,51 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
 
   const transition = (lifecycle: Lifecycle) => () => promiseChain(hooks.get(lifecycle));
 
+  const start = memo(async () => {
+    if (appState !== AppState.IDLE) throw new Error('La aplicación ya ha comenzado.');
+
+    logger.info('Inicio de la aplicación');
+
+    try {
+      await promiseChain([
+        status(AppState.STARTING),
+        transition(Lifecycle.BOOTING),
+        transition(Lifecycle.BOOTED),
+        transition(Lifecycle.READY),
+        transition(Lifecycle.RUNNING),
+        started,
+      ]);
+    } catch (err) {
+      logger.error(err);
+
+      await stop();
+    }
+  });
+
+  const stop = memo(async () => {
+    if (appState === AppState.IDLE) throw new Error('La aplicación no se está ejecutando.');
+
+    if (release) {
+      release();
+      release = null;
+    }
+
+    logger.info('Stopping application');
+
+    await promiseChain([
+      status(AppState.STOPPING),
+      transition(Lifecycle.DISPOSING),
+      transition(Lifecycle.DISPOSED),
+      status(AppState.STOPPED),
+    ]);
+
+    setTimeout(() => {
+      logger.warn(
+        'El proceso de "stop" ha terminado pero algo impide que la aplicación salga.'
+      );
+    }, 5000).unref();
+  });
+
 
 };
 
