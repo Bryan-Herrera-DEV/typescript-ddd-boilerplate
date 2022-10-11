@@ -22,6 +22,12 @@ enum Lifecycle {
   DISPOSING = 'DISPOSING',
   DISPOSED = 'DISPOSED',
 }
+type LifecycleHooks = {
+  [key in `on${Capitalize<Lowercase<keyof typeof Lifecycle>>}`]: (
+    fn: HookFn | HookFn[],
+    order?: 'append' | 'prepend'
+  ) => void;
+};
 
 type Application = {
   getState: () => AppState;
@@ -29,7 +35,7 @@ type Application = {
   stop: () => Promise<void>;
   terminate: () => void;
   decorateHooks: (decorator?: (lifecycle: Lifecycle, fn: HookFn | HookFn[]) => HookFn | HookFn[]) => Application;
-};
+} & LifecycleHooks;
 
 const makeHookStore = (): HookStore => {
   const hooks = new Map<Lifecycle, HookFn[]>();
