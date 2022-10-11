@@ -1,9 +1,9 @@
 type HookFn = () => Promise<void>;
 
 type HookStore = {
-  get: (lifecycle: any) => HookFn[];
-  append: (lifecycle: any, ...fn: HookFn[]) => void;
-  prepend: (lifecycle: any, ...fn: HookFn[]) => void;
+  get: (lifecycle: Lifecycle) => HookFn[];
+  append: (lifecycle: Lifecycle, ...fn: HookFn[]) => void;
+  prepend: (lifecycle: Lifecycle, ...fn: HookFn[]) => void;
 };
 
 enum AppState {
@@ -14,14 +14,23 @@ enum AppState {
   STOPPED = 'STOPED',
 }
 
+enum Lifecycle {
+  BOOTING = 'BOOTING',
+  BOOTED = 'BOOTED',
+  READY = 'READY',
+  RUNNING = 'RUNNING',
+  DISPOSING = 'DISPOSING',
+  DISPOSED = 'DISPOSED',
+}
+
 const makeHookStore = (): HookStore => {
-  const hooks = new Map<any, HookFn[]>();
+  const hooks = new Map<Lifecycle, HookFn[]>();
 
-  const get = (lifecycle: any) => hooks.get(lifecycle) || [];
+  const get = (lifecycle: Lifecycle) => hooks.get(lifecycle) || [];
 
-  const append = (lifecycle: any, ...fn: HookFn[]) => hooks.set(lifecycle, [...get(lifecycle), ...fn]);
+  const append = (lifecycle: Lifecycle, ...fn: HookFn[]) => hooks.set(lifecycle, [...get(lifecycle), ...fn]);
 
-  const prepend = (lifecycle: any, ...fn: HookFn[]) => hooks.set(lifecycle, [...fn, ...get(lifecycle)]);
+  const prepend = (lifecycle: Lifecycle, ...fn: HookFn[]) => hooks.set(lifecycle, [...fn, ...get(lifecycle)]);
 
   return {
     get,
