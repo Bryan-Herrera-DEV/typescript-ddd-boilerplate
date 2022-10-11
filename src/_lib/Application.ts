@@ -57,6 +57,18 @@ const promiseChain = <M extends HookFn[]>(hooksFns: M) => {
   return hooksFns.reduce((chain, fn) => chain.then(fn), Promise.resolve());
 };
 
+const memo = <F extends (...args: any[]) => any>(fn: F) => {
+  let value: ReturnType<F>;
+
+  return (...args: Parameters<F>): ReturnType<F> => {
+    if (!value) {
+      value = fn(args);
+    }
+
+    return value;
+  };
+};
+
 const makeApp = ({ logger, shutdownTimeout }: any) => {
   let appState: AppState = AppState.IDLE;
   let release: null | (() => void);
@@ -71,13 +83,17 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
 
       release = resolve;
     });
+
   const status = (newStatus: AppState) => async () => {
     appState = newStatus;
   };
 
   const transition = (lifecycle: Lifecycle) => () => promiseChain(hooks.get(lifecycle));
 
+
 };
+
+
 
 export { makeApp };
 export type { HookFn, Application };
