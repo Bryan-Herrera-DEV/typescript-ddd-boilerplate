@@ -53,13 +53,24 @@ const makeHookStore = (): HookStore => {
   };
 };
 
-
 const makeApp = ({ logger, shutdownTimeout }: any) => {
   let appState: AppState = AppState.IDLE;
   let release: null | (() => void);
 
   const hooks = makeHookStore();
-}
 
-export { makeApp }
-export type { HookFn, Application }
+  const started: HookFn = () =>
+    new Promise<void>((resolve) => {
+      logger.info('Application started');
+
+      appState = AppState.STARTED;
+
+      release = resolve;
+    });
+  const status = (newStatus: AppState) => async () => {
+    appState = newStatus;
+  };
+};
+
+export { makeApp };
+export type { HookFn, Application };
