@@ -1,0 +1,3 @@
+const main = () => {}
+
+export { main }

@@ -5,5 +5,12 @@ import('tsconfig-paths').then(({ register }) => {
     addMatchAll: false,
   });
 })
-.then(() => import('@/prueba'))
-.then(({b}) => console.log(b));
+.then(() => import('@/_boot'))
+.then(({ main }) => main())
+.catch((err) => {
+  console.error(err);
+
+  if (process.env.NODE_ENV === 'production') {
+    process.kill(process.pid, 'SIGTERM');
+  }
+});
