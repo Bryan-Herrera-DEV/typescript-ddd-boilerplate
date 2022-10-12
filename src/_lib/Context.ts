@@ -78,6 +78,22 @@ const makeContext = <T extends Record<string | symbol, any>>(
         })
       );
 
+      if (typeof result === 'function') {
+        app.onDisposing(async () => {
+          logger.info(`Disposing ${name} module.`);
+
+          return result().catch((err) => {
+            logger.error(`Error while disposing of ${name} module. Trying to resume teardown`);
+            logger.error(err);
+          });
+        }, 'prepend');
+      }
+
     })
+
+    app.onBooting(bootOrder);
+
+    return app.start()
+
   }
 };
