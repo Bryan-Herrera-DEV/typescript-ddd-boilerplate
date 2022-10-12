@@ -60,14 +60,14 @@ const makeContext = <T extends Record<string | symbol, any>>(
           app: app.decorateHooks((lifecycle, fn) => async () => {
             const isArray = Array.isArray(fn);
 
-            logger.info(`Corriendo ${lifecycle.toLocaleLowerCase()} hook${isArray ? 's' : ''} desde el modulo $name`)
+            logger.info(`Corriendo ${lifecycle.toLocaleLowerCase()} hook${isArray ? 's' : ''} desde el modulo ${name}`)
 
             return (Array.isArray(fn) ? fn : [fn]).reduce(
               (chain, hook) =>
                 chain.then(() =>
                   hook().catch((err) => {
                     logger.error(
-                      `Error while performing ${lifecycle.toLowerCase()} hook${isArray ? 's' : ''} from ${name} module.`
+                      `Error durante la realización de ${lifecycle.toLowerCase()} hook${isArray ? 's' : ''}  desde el modulo ${name}.`
                     );
                     logger.error(err);
                   })
