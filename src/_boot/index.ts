@@ -1,6 +1,6 @@
 import { withContext } from "@/context"
 
-const main = withContext(async ({}) => {
+const main = withContext(async ({  }) => {
 
 })
 
