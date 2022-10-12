@@ -1,7 +1,10 @@
 import { withContext } from "@/context"
-
-const main = withContext(async ({ app }) => {
-
+import { Container } from "@/container"
+import { asValue } from "awilix";
+const main = withContext(async ({ app, container }) => {
+  container.register({
+    app: asValue(app)
+  });
 })
 
 export { main }
