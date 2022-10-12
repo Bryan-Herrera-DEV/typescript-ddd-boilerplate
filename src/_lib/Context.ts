@@ -1,5 +1,7 @@
 import { makeApp, HookFn, Application } from '@/_lib/Application';
 
+type EntrypointFn<T extends Record<string | symbol, any>> = (arg: Context<T>) => Promise<void>;
+
 type BootFn<T extends Record<string | symbol, any>> = (
   arg: Context<T>
 ) => Promise<void | HookFn>;
@@ -45,11 +47,6 @@ const makeContext = <T extends Record<string | symbol, any>>(
       const foreignModules = modules.filter((module) => !module[moduleKey])
       throw new Error(`Módulo(s) proporcionado(s) para la función bootstrap:  ${foreignModules.join(', ')}`);
     }
-    const context: Context<T> = {
-      ...localContext,
-      app,
-      bootstrap,
-    };
 
     const bootOrder = modules.map(({ name, fn }) => async () => {
       logger.info(`Lanzando Modulo ${name}.`);
@@ -94,6 +91,12 @@ const makeContext = <T extends Record<string | symbol, any>>(
     app.onBooting(bootOrder);
 
     return app.start()
-
   }
+
+  const context: Context<T> = {
+    ...localContext,
+    app,
+    bootstrap,
+  };
+
 };
