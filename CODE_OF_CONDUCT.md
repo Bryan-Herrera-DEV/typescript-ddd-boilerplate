@@ -30,7 +30,7 @@ Los encargados del mantenimiento del proyecto son responsables de aclarar las no
 Este Código de Conducta se aplica en todos los espacios de la comunidad, y también se aplica cuando una persona representa oficialmente a la comunidad en espacios públicos. Ejemplos de representación de nuestra comunidad incluyen el uso de una dirección de correo electrónico oficial, la publicación a través de una cuenta oficial en las redes sociales, o la actuación como representante designado en un evento en línea o fuera de línea.
 
 ## Aplicación de la ley
-Los casos de comportamiento abusivo, acosador o inaceptable pueden ser denunciados a los líderes de la comunidad responsables de su cumplimiento en hello@thinkster.io. Todas las quejas serán revisadas e investigadas de forma rápida y justa.
+Los casos de comportamiento abusivo, acosador o inaceptable pueden ser denunciados a los líderes de la comunidad responsables de su cumplimiento en bryherrera55@gmail.com. Todas las quejas serán revisadas e investigadas de forma rápida y justa.
 
 Todos los responsables de la comunidad están obligados a respetar la privacidad y la seguridad del denunciante de cualquier incidente.
 
