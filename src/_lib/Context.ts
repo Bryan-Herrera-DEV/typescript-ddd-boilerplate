@@ -45,5 +45,10 @@ const makeContext = <T extends Record<string | symbol, any>>(
       const foreignModules = modules.filter((module) => !module[moduleKey])
       throw new Error(`Módulo(s) proporcionado(s) para la función bootstrap:  ${foreignModules.join(', ')}`);
     }
-  };
+
+    const bootOrder = modules.map(({ name, fn }) => async () => {
+      logger.info(`Lanzando Modulo ${name}.`);
+
+    })
+  }
 };
