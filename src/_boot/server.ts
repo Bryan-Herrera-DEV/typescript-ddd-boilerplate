@@ -1,3 +1,4 @@
+import { makeModule } from '@/context';
 import cors, { CorsOptions } from 'cors';
 
 type ServerConfig = {
@@ -8,6 +9,8 @@ type ServerConfig = {
   };
 };
 
-const server = () => {}
+const server = makeModule('server', async () => {
+
+})
 
 export { server };

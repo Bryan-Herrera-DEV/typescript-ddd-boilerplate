@@ -26,6 +26,7 @@
     "awilix": "^7.0.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "tsconfig-paths": "^4.1.0",
     "typescript": "^4.8.4"
   },
