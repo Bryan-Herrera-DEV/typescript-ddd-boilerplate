@@ -23,10 +23,12 @@
     "url": "https://github.com/Bryan-Herrera-DEV/typescript-ddd-boilerplate/issues"
   },
   "dependencies": {
+    "@types/pino": "^7.0.5",
     "awilix": "^7.0.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "pino": "^8.6.1",
     "tsconfig-paths": "^4.1.0",
     "typescript": "^4.8.4"
   },
