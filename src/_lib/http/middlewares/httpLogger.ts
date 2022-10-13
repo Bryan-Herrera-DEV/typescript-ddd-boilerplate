@@ -1,6 +1,6 @@
 import { Request, RequestHandler } from 'express';
 import logger, { Options, startTime } from 'pino-http';
-import { randomUUID } from 'crypto';
+import pino from 'pino';
 
 type LoggerOptions = Options & { customProps?: (req: Request, res: Response) => any };
 
@@ -8,25 +8,21 @@ const httpLoggerOptions = (): LoggerOptions => {
   const getReqId = (req: Request) => `[req:${req.id}]`;
 
   return {
-    genReqId: () => randomUUID(),
     autoLogging: { ignorePaths: ['/status', '/favicon.ico'] },
     customSuccessMessage: function (res) {
       const req = res.req as Request;
 
-      const reqId = getReqId(req);
-
-      return `${reqId} ${res.statusCode} - ${req.method} ${req.originalUrl} ${Date.now() - res[startTime]}ms`;
+      return `${res.statusCode} - ${req.method} ${req.originalUrl} ${Date.now() - res[startTime]}ms`;
     },
     customErrorMessage: function (error, res) {
       const req = res.req as Request;
 
-      const reqId = getReqId(req);
 
-      return `${reqId} ${res.statusCode} - ${req.method} ${req.originalUrl} - [${error.name}] ${error.message} ${
+      return `${res.statusCode} - ${req.method} ${req.originalUrl} - [${error.name}] ${error.message} ${
         Date.now() - res[startTime]
       }ms`;
     },
-    customLogLevel: function (res: any, err) {
+    customLogLevel: function (res, err) {
       if (res.statusCode >= 400 && res.statusCode < 500) {
         return 'warn';
       } else if (res.statusCode >= 500 || err) {
@@ -35,6 +31,11 @@ const httpLoggerOptions = (): LoggerOptions => {
         return 'trace';
       }
       return 'info';
+    },
+    serializers: {
+      err: pino.stdSerializers.err,
+      req: pino.stdSerializers.req,
+      res: pino.stdSerializers.res
     },
   };
 };
