@@ -1,8 +1,8 @@
-import { userModule } from '@/Apps/users';
+import { userModule, UserRegistry } from '@/Apps/users';
 type AppModulesConfig = {};
 
 const appModules = [userModule];
-
+type AppModulesRegistry = UserRegistry;
 
 export { appModules };
-export type { AppModulesConfig }
+export type { AppModulesConfig, AppModulesRegistry }
