@@ -30,6 +30,7 @@
     "pino": "^6.12.0",
     "pino-http": "^5.5.0",
     "tsconfig-paths": "^4.1.0",
+    "types-joi": "^2.1.0",
     "typescript": "^4.8.4"
   },
   "devDependencies": {
