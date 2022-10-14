@@ -6,14 +6,6 @@ type HookStore = {
   prepend: (lifecycle: Lifecycle, ...fn: HookFn[]) => void;
 };
 
-enum AppState {
-  IDLE = 'IDLE',
-  STARTING = 'STARTING',
-  STARTED = 'STARTED',
-  STOPPING = 'STOPPING',
-  STOPPED = 'STOPED',
-}
-
 enum Lifecycle {
   BOOTING = 'BOOTING',
   BOOTED = 'BOOTED',
@@ -22,6 +14,7 @@ enum Lifecycle {
   DISPOSING = 'DISPOSING',
   DISPOSED = 'DISPOSED',
 }
+
 type LifecycleHooks = {
   [key in `on${Capitalize<Lowercase<keyof typeof Lifecycle>>}`]: (
     fn: HookFn | HookFn[],
@@ -37,40 +30,12 @@ type Application = {
   decorateHooks: (decorator?: (lifecycle: Lifecycle, fn: HookFn | HookFn[]) => HookFn | HookFn[]) => Application;
 } & LifecycleHooks;
 
-const makeHookStore = (): HookStore => {
-  const hooks = new Map<Lifecycle, HookFn[]>();
-
-  const get = (lifecycle: Lifecycle) => hooks.get(lifecycle) || [];
-
-  const append = (lifecycle: Lifecycle, ...fn: HookFn[]) => hooks.set(lifecycle, [...get(lifecycle), ...fn]);
-
-  const prepend = (lifecycle: Lifecycle, ...fn: HookFn[]) => hooks.set(lifecycle, [...fn, ...get(lifecycle)]);
-
-  return {
-    get,
-    append,
-    prepend,
-  };
+type ApplicationOptions = {
+  shutdownTimeout: number;
+  logger: Pick<Console, 'info' | 'error' | 'warn'>;
 };
 
-const promiseChain = <M extends HookFn[]>(hooksFns: M) => {
-  return hooksFns.reduce((chain, fn) => chain.then(fn), Promise.resolve());
-};
-
-const memo = <F extends (...args: any[]) => any>(fn: F) => {
-  let value: ReturnType<F>;
-
-  return (...args: Parameters<F>): ReturnType<F> => {
-    if (!value) {
-      value = fn(args);
-    }
-
-    return value;
-  };
-};
-const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-
-const makeApp = ({ logger, shutdownTimeout }: any) => {
+const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application => {
   let appState: AppState = AppState.IDLE;
   let release: null | (() => void);
 
@@ -78,7 +43,7 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
 
   const started: HookFn = () =>
     new Promise<void>((resolve) => {
-      logger.info('Application started');
+      logger.info('Aplicacion iniciada');
 
       appState = AppState.STARTED;
 
@@ -94,7 +59,7 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
   const start = memo(async () => {
     if (appState !== AppState.IDLE) throw new Error('La aplicación ya ha comenzado.');
 
-    logger.info('Inicio de la aplicación');
+    logger.info('Iniciando Aplicacion');
 
     try {
       await promiseChain([
@@ -120,7 +85,7 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
       release = null;
     }
 
-    logger.info('Stopping application');
+    logger.info('Deteniendo Aplicacion');
 
     await promiseChain([
       status(AppState.STOPPING),
@@ -135,7 +100,6 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
       );
     }, 5000).unref();
   });
-
 
   let forceShutdown = false;
 
@@ -176,7 +140,7 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
   const lifecycleHooks = (
     decorator: (lifecycle: Lifecycle, fn: HookFn | HookFn[]) => HookFn | HookFn[] = (lifecycle, fn) => fn
   ) => {
-    const once = (lifecycle: Lifecycle, fn: HookFn | HookFn[], order = 'append') => {
+    const once = (lifecycle, fn, order = 'append') => {
       const decoratedFn = decorator(lifecycle, fn);
       Array.isArray(decoratedFn) ? hooks[order](lifecycle, ...decoratedFn) : hooks[order](lifecycle, decoratedFn);
     };
@@ -189,7 +153,6 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
       {}
     ) as unknown as LifecycleHooks;
   };
-
 
   const application: Application = {
     start,
@@ -206,7 +169,47 @@ const makeApp = ({ logger, shutdownTimeout }: any) => {
   return application;
 };
 
+enum AppState {
+  IDLE = 'IDLE',
+  STARTING = 'STARTING',
+  STARTED = 'STARTED',
+  STOPPING = 'STOPPING',
+  STOPPED = 'STOPED',
+}
 
+const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+
+const memo = <F extends (...args: any[]) => any>(fn: F) => {
+  let value: ReturnType<F>;
+
+  return (...args: Parameters<F>): ReturnType<F> => {
+    if (!value) {
+      value = fn(args);
+    }
+
+    return value;
+  };
+};
+
+const promiseChain = <M extends HookFn[]>(hooksFns: M) => {
+  return hooksFns.reduce((chain, fn) => chain.then(fn), Promise.resolve());
+};
+
+const makeHookStore = (): HookStore => {
+  const hooks = new Map<Lifecycle, HookFn[]>();
+
+  const get = (lifecycle: Lifecycle) => hooks.get(lifecycle) || [];
+
+  const append = (lifecycle: Lifecycle, ...fn: HookFn[]) => hooks.set(lifecycle, [...get(lifecycle), ...fn]);
+
+  const prepend = (lifecycle: Lifecycle, ...fn: HookFn[]) => hooks.set(lifecycle, [...fn, ...get(lifecycle)]);
+
+  return {
+    get,
+    append,
+    prepend,
+  };
+};
 
 export { makeApp };
-export type { HookFn, Application };
+export type { Application, HookFn };

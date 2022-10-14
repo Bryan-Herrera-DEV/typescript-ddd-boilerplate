@@ -1,17 +1,10 @@
-import { makeApp, HookFn, Application } from '@/_lib/Application';
+import { Application, makeApp, HookFn } from '@/_lib/Application';
 
-type EntrypointFn<T extends Record<string | symbol, any>> = (
-  arg: Context<T>
-) => Promise<void>;
+type EntrypointFn<T extends Record<string | symbol, any>> = (arg: Context<T>) => Promise<void>;
 
-type BootFn<T extends Record<string | symbol, any>> = (
-  arg: Context<T>
-) => Promise<void | HookFn>;
+type BootFn<T extends Record<string | symbol, any>> = (arg: Context<T>) => Promise<void | HookFn>;
 
-type Module<
-  T extends Record<string | symbol, any>,
-  F extends BootFn<T> = BootFn<any>
-> = {
+type Module<T extends Record<string | symbol, any>, F extends BootFn<T> = BootFn<any>> = {
   name: string;
   fn: F;
 };
@@ -22,6 +15,11 @@ type Context<T extends Record<string | symbol, any>> = {
   app: ContextApp;
   bootstrap: <M extends Module<T>[]>(...modules: M) => Promise<void>;
 } & T;
+
+type ContextProvider<T extends Record<string | symbol, any>> = {
+  makeModule: <F extends BootFn<T>, M extends Module<F>>(name: string, fn: F) => M;
+  withContext: <F extends EntrypointFn<T>>(fn: F) => () => Promise<void>;
+};
 
 type ContextOptions = {
   shutdownTimeout: number;
@@ -36,7 +34,7 @@ const defaultOptions: ContextOptions = {
 const makeContext = <T extends Record<string | symbol, any>>(
   localContext: T,
   opts: Partial<ContextOptions> = {}
-) => {
+): ContextProvider<T> => {
   const { shutdownTimeout, logger } = { ...defaultOptions, ...opts };
 
   const moduleKey = Symbol();
@@ -114,10 +112,7 @@ const makeContext = <T extends Record<string | symbol, any>>(
     bootstrap,
   };
   return {
-    makeModule: <F extends BootFn<T>, M extends Module<F>>(
-      name: string,
-      fn: F
-    ): M =>
+    makeModule: <F extends BootFn<T>, M extends Module<F>>(name: string, fn: F): M =>
       ({
         [moduleKey]: true,
         name,
