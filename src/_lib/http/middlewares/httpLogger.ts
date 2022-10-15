@@ -5,8 +5,6 @@ import pino from 'pino';
 type LoggerOptions = Options & { customProps?: (req: Request, res: Response) => any };
 
 const httpLoggerOptions = (): LoggerOptions => {
-  const getReqId = (req: Request) => `[req:${req.id}]`;
-
   return {
     autoLogging: { ignorePaths: ['/status', '/favicon.ico'] },
     customSuccessMessage: function (res) {
@@ -37,6 +35,7 @@ const httpLoggerOptions = (): LoggerOptions => {
       req: pino.stdSerializers.req,
       res: pino.stdSerializers.res
     },
+
   };
 };
 

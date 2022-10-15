@@ -43,7 +43,7 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
 
   const started: HookFn = () =>
     new Promise<void>((resolve) => {
-      logger.info('Aplicacion iniciada');
+      logger.info('Aplicacion Iniciada');
 
       appState = AppState.STARTED;
 
@@ -57,9 +57,9 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
   const transition = (lifecycle: Lifecycle) => () => promiseChain(hooks.get(lifecycle));
 
   const start = memo(async () => {
-    if (appState !== AppState.IDLE) throw new Error('La aplicación ya ha comenzado.');
+    if (appState !== AppState.IDLE) throw new Error('La aplicación ya está en marcha.');
 
-    logger.info('Iniciando Aplicacion');
+    logger.info('Iniciando aplicacion');
 
     try {
       await promiseChain([
@@ -85,7 +85,7 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
       release = null;
     }
 
-    logger.info('Deteniendo Aplicacion');
+    logger.info('Deteniendo aplicacion');
 
     await promiseChain([
       status(AppState.STOPPING),
@@ -96,7 +96,8 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
 
     setTimeout(() => {
       logger.warn(
-        'El proceso de "stop" ha terminado pero algo impide que la aplicación salga.'
+        'The stop process has finished but something is keeping the application from exiting. ' +
+          'Check your cleanup process!'
       );
     }, 5000).unref();
   });
@@ -107,7 +108,7 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
     process.stdout.write('\n');
 
     setTimeout(() => {
-      logger.error('Vale, ¡se me acabó la paciencia!   #ragequit');
+      logger.error('Ok, mi paciencia se termino! #ragequit');
       process.exit(code);
     }, shutdownTimeout).unref();
 

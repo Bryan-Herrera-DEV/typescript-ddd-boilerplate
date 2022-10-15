@@ -1,5 +1,5 @@
-import { Event } from '@/_lib/events/Event';
 import { ApplicationService } from '@/_lib/DDD';
+import { Event } from '@/_lib/events/Event';
 import { Publisher } from '@/_lib/events/Publisher';
 
 type Enqueue = <E extends Event<any>>(event: E) => void;

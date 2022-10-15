@@ -7,9 +7,9 @@ type ControllerHandler = (dependencies: any) => AsyncHandler;
 const handler = (handler: ControllerHandler): RequestHandler => {
   const resolver = asFunction(handler);
 
-  return (req, res, next) => {
+  return (req: any, res, next) => {
     if (!('container' in req)) {
-      throw new Error("No se encuentra el contenedor de peticiones. ¿Ha registrado el middleware `requestContainer`?");
+      throw new Error("No se encuentra el contenedor de peticiones. ¿Has registrado el middleware `requestContainer`?");
     }
 
     const injectedHandler = req.container.build(resolver);
