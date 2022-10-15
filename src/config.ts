@@ -8,7 +8,7 @@ const config: Configuration = {
   cli: process.argv.includes('--cli'),
   environment: environment(),
   repl: {
-    port: envNumber('REPL_PORT', 2580),
+    port: envNumber('REPL_PORT', 5010),
   },
   http: {
     host: envString('HOST', 'localhost'),
