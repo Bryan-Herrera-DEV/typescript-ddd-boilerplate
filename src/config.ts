@@ -15,13 +15,13 @@ const config: Configuration = {
     port: envNumber('PORT', 5000),
   },
   swagger: {
-    title: 'Blog API',
+    title: 'Prueba',
     version: '1.0.0',
     basePath: '/api',
     docEndpoint: '/api-docs',
   },
   mongodb: {
-    database: envString('DB_NAME', 'blog'),
+    database: envString('DB_NAME', 'TESTING_BOILERPLATE'),
     host: envString('DB_HOST', 'mongodb://localhost:27017'),
     username: envString('DB_USER', ''),
     password: envString('DB_PASS', ''),

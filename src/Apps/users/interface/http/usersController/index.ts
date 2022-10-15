@@ -9,8 +9,16 @@ const makeUsersController = ({ apiRouter }: Dependencies) => {
 
   /**
    * @swagger
+   *
+   * /users/health:
+   *   get:
+   *     tags:
+   *       - Users
+   *     summary: Obtiene status del modulo PubSub de usuarios
+   *     produces:
+   *       - application/json
    */
-  router.get('/prueba', (req, res) => {
+  router.get('/users/health', (req, res) => {
     res.send('Funciona')
   });
 
