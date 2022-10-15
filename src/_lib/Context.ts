@@ -75,7 +75,7 @@ const makeContext = <T extends Record<string | symbol, any>>(
 
       if (typeof result === 'function') {
         app.onDisposing(async () => {
-          logger.info(`Disponiendo modulo ${name}.`);
+          logger.info(`Eliminando modulo ${name}.`);
 
           return result().catch((err) => {
             logger.error(`Error al eliminar el módulo ${name}. Intentando reanudar el desmontaje`);

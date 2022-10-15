@@ -1,6 +1,8 @@
 import { makeModule } from "@/context";
 
-const userModule = makeModule('users', async () => {})
+const userModule = makeModule('users', async ({ container: { register }, initialize }) => {
+
+})
 
 type UserRegistry = {}
 
