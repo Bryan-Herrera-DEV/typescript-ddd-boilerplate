@@ -1,8 +1,8 @@
-import { Article } from '@/article/domain/Article';
+import { Users } from '@/Apps/users/domain/Users';
 import { Repository } from '@/_lib/DDD';
 
-type UsersRepository = Repository<> & {
-  findById(id: string): Promise<>;
+type UsersRepository = Repository<Users.Type> & {
+  findById(id: string): Promise<Users.Type>;
 };
 
-export { ArticleRepository };
+export { UsersRepository };
