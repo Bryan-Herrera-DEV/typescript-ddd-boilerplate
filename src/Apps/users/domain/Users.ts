@@ -3,68 +3,72 @@ import { makeWithInvariants } from '@/_lib/WithInvariants';
 import { UsersId } from '@/_sharedKernel/domain/UsersId';
 
 namespace Users {
-  type Article = AggregateRoot<UsersId> &
+  type Users = AggregateRoot<UsersId> &
     Readonly<{
-      title: string;
-      content: string;
-      state: 'DRAFT' | 'PUBLISHED' | 'DELETED';
-      publishedAt: Date | null;
-      createdAt: Date;
-      updatedAt: Date;
-      version: number;
+      nombre: string,
+      user_name: string;
+      email: string;
+      password: string;
+      status: 'ACTIVE' | 'DISABLED';
+      createdAt: Date | null;
+      updatedAt: Date | null;
     }>;
 
-  type PublishedArticle = Omit<Article, 'publishedAt' | 'state'> & Readonly<{ state: 'PUBLISHED'; publishedAt: Date }>;
+  type ActiveUser = Omit<Users, 'createdAt' | 'status'> & Readonly<{ status: 'ACTIVE'; createdAt: Date }>;
 
-  const withInvariants = makeWithInvariants<Article>((self, assert) => {
-    assert(self.title?.length > 0);
-    assert(self.content?.length > 0);
+  const withInvariants = makeWithInvariants<Users>((self, assert) => {
+    assert(self.nombre?.length > 0);
+    assert(self.user_name?.length > 0);
+    assert(self.email?.length > 0);
   });
 
-  type ArticleProps = Readonly<{
+  type UsersProps = Readonly<{
     id: UsersId;
-    title: string;
-    content: string;
+    nombre: string;
+    user_name: string;
+    email: string;
+    password: string;
   }>;
 
   export const create = withInvariants(
-    (props: ArticleProps): Article => ({
+    (props: UsersProps): Users => ({
       id: props.id,
-      title: props.title,
-      content: props.content,
-      state: 'DRAFT',
-      publishedAt: null,
+      nombre: props.nombre,
+      user_name: props.user_name,
+      email: props.email,
+      password: props.password,
+      status: 'ACTIVE',
       createdAt: new Date(),
       updatedAt: new Date(),
-      version: 0,
+
     })
   );
 
   export const publish = withInvariants(
-    (self: Article): PublishedArticle => ({
+    (self: Users): ActiveUser => ({
       ...self,
-      state: 'PUBLISHED',
-      publishedAt: new Date(),
+      status: 'ACTIVE',
+      createdAt: new Date(),
     })
   );
 
   export const markAsDeleted = withInvariants(
-    (self: Article): Article => ({
+    (self: Users): Users => ({
       ...self,
-      state: 'DELETED',
+      status: 'DISABLED',
     })
   );
 
-  export const changeTitle = withInvariants(
-    (self: Article, title: string): Article => ({
+  export const nombre = withInvariants(
+    (self: Users, nombre: string): Users => ({
       ...self,
-      title,
+      nombre,
     })
   );
 
-  export const isPublished = (self: Article): self is PublishedArticle => self.state === 'PUBLISHED';
+  export const isPublished = (self: Users): self is ActiveUser => self.status === 'ACTIVE';
 
-  export type Type = Article;
+  export type Type = Users;
 }
 
 export { Users };

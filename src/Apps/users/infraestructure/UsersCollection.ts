@@ -8,8 +8,8 @@ type UsersSchema = {
   email: string;
   password: string;
   status: 'ACTIVE', 'DISABLED';
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }
 
 type UsersCollection = Collection<UsersSchema>;
